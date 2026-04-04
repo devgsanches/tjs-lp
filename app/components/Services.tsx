@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   AirplaneTilt,
   Users,
@@ -78,8 +78,6 @@ function ServiceCard({
           ? "bg-champagne/[0.06] border-champagne/20"
           : "bg-transparent border-champagne/[0.06] hover:border-champagne/10 hover:bg-champagne/[0.02]"
       }`}
-      layout
-      transition={{ type: "spring", stiffness: 100, damping: 20 }}
     >
       <div className="flex items-start justify-between">
         <div className="flex items-center gap-4">
@@ -114,25 +112,24 @@ function ServiceCard({
         </span>
       </div>
 
-      <AnimatePresence>
-        {isActive && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <p className="text-champagne-muted text-sm leading-relaxed mt-5 max-w-[55ch]">
-              {service.description}
-            </p>
-            <div className="mt-6">
-              <span className="inline-flex items-center gap-2 px-5 py-2.5 bg-champagne/10 border border-champagne/20 text-champagne text-xs tracking-wide rounded-lg hover:bg-champagne/15 transition-colors duration-300">
-                {service.cta}
-              </span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      <div
+        className="grid transition-[grid-template-rows,opacity] duration-400 ease-[cubic-bezier(0.16,1,0.3,1)]"
+        style={{
+          gridTemplateRows: isActive ? "1fr" : "0fr",
+          opacity: isActive ? 1 : 0,
+        }}
+      >
+        <div className="overflow-hidden">
+          <p className="text-champagne-muted text-sm leading-relaxed mt-5 max-w-[55ch]">
+            {service.description}
+          </p>
+          <div className="mt-6 pb-1">
+            <span className="inline-flex items-center gap-2 px-5 py-2.5 bg-champagne/10 border border-champagne/20 text-champagne text-xs tracking-wide rounded-lg hover:bg-champagne/15 transition-colors duration-300">
+              {service.cta}
+            </span>
+          </div>
+        </div>
+      </div>
     </motion.button>
   );
 }
