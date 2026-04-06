@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Jet Society",
+  title: "The Jet Society - A sociedade do jato",
   description:
     "Jet Society\u00AE \u00E9 um clube seleto de propriet\u00E1rios de jatos, combinando gest\u00E3o completa, efici\u00EAncia operacional e benef\u00EDcios sob medida.",
 };
