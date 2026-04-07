@@ -9,67 +9,22 @@ import {
   Crown,
 } from "@phosphor-icons/react";
 import { AnimatedSection } from "./AnimatedSection";
+import { type Dictionary } from "@/lib/dictionaries";
 
-const services = [
-  {
-    id: "charter",
-    icon: AirplaneTilt,
-    title: "Private Charter",
-    description:
-      "Voe quando quiser, para onde quiser. Acesso imediato a jatos executivos, sem compromissos de longo prazo.",
-    cta: "Cotar voo agora",
-    hours: "5h",
-    hoursLabel: "a partir de 5 horas/ano",
-    tag: "Operação Flapper",
-  },
-  {
-    id: "membership",
-    icon: Users,
-    title: "Programa de membros",
-    description:
-      "Faça parte de um grupo exclusivo com acesso a benefícios premium, tarifas preferenciais e experiências personalizadas.",
-    cta: "Conhecer programa",
-    hours: "15h",
-    hoursLabel: "a partir de 15 horas/ano",
-    tag: "Exclusivo",
-  },
-  {
-    id: "fractional",
-    icon: ChartPieSlice,
-    title: "Propriedade fracionada",
-    description:
-      "Possua uma fração de um jato executivo com todos os benefícios da propriedade total por uma fração do custo.",
-    cta: "Saber mais",
-    hours: "25h",
-    hoursLabel: "a partir de 25 horas/ano",
-    tag: "Popular",
-  },
-  {
-    id: "full",
-    icon: Crown,
-    title: "Propriedade total",
-    description:
-      "A experiência definitiva em aviação privada. Sua aeronave, sua agenda, seus termos. Gestão completa inclusa.",
-    cta: "Falar com especialista",
-    hours: "50h",
-    hoursLabel: "a partir de 50 horas/ano",
-    tag: "Premium",
-  },
-];
+const serviceIcons = [AirplaneTilt, Users, ChartPieSlice, Crown];
+const serviceIds = ["charter", "membership", "fractional", "full"];
 
 function ServiceCard({
   service,
+  icon: Icon,
   isActive,
   onClick,
-  index,
 }: {
-  service: (typeof services)[0];
+  service: Dictionary["services"]["items"][number];
+  icon: React.ComponentType<{ size: number; weight: "fill" | "regular"; className: string }>;
   isActive: boolean;
   onClick: () => void;
-  index: number;
 }) {
-  const Icon = service.icon;
-
   return (
     <motion.button
       onClick={onClick}
@@ -161,7 +116,7 @@ function FlightHoursBar() {
   );
 }
 
-export function Services() {
+export function Services({ t }: { t: Dictionary }) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   return (
@@ -169,22 +124,22 @@ export function Services() {
       <div className="max-w-[1400px] mx-auto px-6 md:px-10">
         <AnimatedSection>
           <span className="text-xs font-mono text-champagne-muted tracking-widest uppercase">
-            O que oferecemos
+            {t.services.label}
           </span>
           <h2 className="mt-4 text-3xl md:text-5xl tracking-tighter leading-none font-medium text-ivory max-w-[20ch]">
-            Cada detalhe, cuidado por nós
+            {t.services.title}
           </h2>
         </AnimatedSection>
 
         <div className="mt-16 grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16">
           <div className="lg:col-span-3 flex flex-col gap-3">
-            {services.map((service, i) => (
+            {t.services.items.map((service, i) => (
               <ServiceCard
-                key={service.id}
+                key={serviceIds[i]}
                 service={service}
+                icon={serviceIcons[i]}
                 isActive={activeIndex === i}
                 onClick={() => setActiveIndex(i)}
-                index={i}
               />
             ))}
           </div>
@@ -195,12 +150,12 @@ export function Services() {
           >
             <div className="relative p-8 md:p-10 rounded-3xl bg-gradient-to-br from-champagne/[0.04] to-transparent border border-champagne/[0.08]">
               <span className="text-xs font-mono text-champagne-muted tracking-widest uppercase">
-                Horas de voo anuais
+                {t.services.flightHours.label}
               </span>
               <h3 className="mt-3 text-lg font-medium text-ivory tracking-tight">
-                Para quem voa
+                {t.services.flightHours.title}
               </h3>
-              <p className="text-xs text-champagne-muted mt-1">(horas/ano)</p>
+              <p className="text-xs text-champagne-muted mt-1">{t.services.flightHours.unit}</p>
               <div className="mt-8">
                 <FlightHoursBar />
               </div>
@@ -216,12 +171,11 @@ export function Services() {
                   />
                 </div>
                 <span className="text-xs font-mono text-champagne-muted tracking-wider uppercase">
-                  Operação Flapper
+                  {t.services.flapper.label}
                 </span>
               </div>
               <p className="text-sm text-champagne-muted leading-relaxed">
-                Todos os voos são operados por aeronaves com certificação de
-                segurança, conforme Part 135/121.
+                {t.services.flapper.text}
               </p>
             </div>
           </AnimatedSection>

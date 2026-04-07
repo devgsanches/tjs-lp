@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { AnimatedSection } from "./AnimatedSection";
+import { type Dictionary } from "@/lib/dictionaries";
 
 const pressLogos = [
   { name: "Forbes", src: "/press/forbes.png", width: 120 },
@@ -12,14 +13,14 @@ const pressLogos = [
   { name: "TechCrunch", src: "/press/techcrunch.png", width: 140 },
 ];
 
-export function Press() {
+export function Press({ t }: { t: Dictionary }) {
   return (
     <section className="relative py-16 md:py-24">
       <div className="max-w-[1400px] mx-auto px-6 md:px-10">
         <AnimatedSection>
           <div className="text-center">
             <span className="text-xs font-mono text-champagne-muted/60 tracking-widest uppercase">
-              Jet Society&reg; também visto em
+              {t.press.label}
             </span>
           </div>
 

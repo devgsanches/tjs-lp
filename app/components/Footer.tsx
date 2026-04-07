@@ -1,6 +1,7 @@
 import { AnimatedSection } from "./AnimatedSection";
+import { type Dictionary } from "@/lib/dictionaries";
 
-export function Footer() {
+export function Footer({ t }: { t: Dictionary }) {
   return (
     <footer className="relative py-16 md:py-24 border-t border-champagne/[0.06]">
       <div className="max-w-[1400px] mx-auto px-6 md:px-10">
@@ -15,13 +16,13 @@ export function Footer() {
               </span>
             </div>
             <p className="mt-4 text-sm text-champagne-muted/60 leading-relaxed max-w-[50ch]">
-              Jet Society&reg;, Sociedade do Jato&reg;, Sociedad del Jet&reg;
+              {t.footer.trademarks}
             </p>
           </div>
 
           <div>
             <span className="text-xs font-mono text-champagne-muted tracking-widest uppercase">
-              Links
+              {t.footer.linksLabel}
             </span>
             <div className="mt-4 flex flex-col gap-3">
               {[
@@ -42,7 +43,7 @@ export function Footer() {
 
           <div>
             <span className="text-xs font-mono text-champagne-muted tracking-widest uppercase">
-              Contato
+              {t.footer.contactLabel}
             </span>
             <div className="mt-4 flex flex-col gap-3">
               <a
@@ -63,11 +64,7 @@ export function Footer() {
 
         <div className="mt-16 pt-8 border-t border-champagne/[0.04]">
           <p className="text-xs text-champagne-muted/30 leading-relaxed max-w-[80ch]">
-            Jet Society&reg; is not a direct air carrier. All flights booked
-            through Flapper will be operated by safety-vetted aircraft, pursuant
-            to Part 135 / Part 121 or their foreign equivalent. While on partner
-            aircraft as part of the Flapper service, passengers are subject to
-            the insurance coverage of said partners.
+            {t.footer.legal}
           </p>
         </div>
       </div>

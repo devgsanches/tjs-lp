@@ -1,14 +1,15 @@
 "use client";
 
-import { motion, useMotionValue, useTransform, AnimatePresence } from "framer-motion";
-import { List, X } from "@phosphor-icons/react";
+import { motion, useMotionValue, AnimatePresence } from "framer-motion";
+import { List, X, GlobeSimple, CaretDown } from "@phosphor-icons/react";
 import { useState, useEffect, useRef, type MouseEvent as ReactMouseEvent } from "react";
+import { type Locale, type Dictionary, locales } from "@/lib/dictionaries";
 
-const navLinks = [
-  { label: "Serviços", href: "#servicos" },
-  { label: "Benefícios", href: "#beneficios" },
-  { label: "App", href: "#app" },
-];
+const localeLabels: Record<Locale, Record<Locale, string>> = {
+  "pt-BR": { "pt-BR": "Português", "en-US": "Inglês", "es-ES": "Espanhol" },
+  "en-US": { "pt-BR": "Portuguese", "en-US": "English", "es-ES": "Spanish" },
+  "es-ES": { "pt-BR": "Portugués", "en-US": "Inglés", "es-ES": "Español" },
+};
 
 function MagneticButton({
   children,
@@ -65,9 +66,64 @@ function NavLink({ href, label }: { href: string; label: string }) {
   );
 }
 
-export function Navbar() {
+function LocaleSwitcher({ locale, className }: { locale: Locale; className?: string }) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+  const otherLocales = locales.filter((l) => l !== locale);
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", handleClick);
+    return () => document.removeEventListener("mousedown", handleClick);
+  }, []);
+
+  return (
+    <div ref={ref} className={`relative ${className ?? ""}`}>
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex items-center gap-1.5 px-3 py-2 text-xs font-mono text-champagne-muted tracking-wider hover:text-champagne transition-colors duration-300"
+      >
+        <GlobeSimple size={14} weight="bold" />
+        {localeLabels[locale][locale]}
+        <CaretDown size={10} weight="bold" className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ duration: 0.15 }}
+            className="absolute right-0 top-full mt-1 min-w-[120px] rounded-lg border border-champagne/10 bg-midnight/90 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.4)] overflow-hidden"
+          >
+            {otherLocales.map((l) => (
+              <a
+                key={l}
+                href={`/${l}`}
+                className="flex items-center gap-2 px-4 py-2.5 text-xs font-mono text-champagne-muted tracking-wider hover:text-champagne hover:bg-champagne/[0.06] transition-colors duration-200"
+              >
+                {localeLabels[locale][l]}
+              </a>
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
+  );
+}
+
+export function Navbar({ locale, t }: { locale: Locale; t: Dictionary }) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  const navLinks = [
+    { label: t.nav.services, href: "#servicos" },
+    { label: t.nav.benefits, href: "#beneficios" },
+    { label: t.nav.app, href: "#app" },
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -91,7 +147,7 @@ export function Navbar() {
       >
         <div className="mx-auto max-w-[1400px] px-6 md:px-10 lg:px-20">
           <div className="flex items-center justify-between h-20">
-            <a href="#" className="flex items-center gap-1.5 group">
+            <a href={`/${locale}`} className="flex items-center gap-1.5 group">
               <span className="text-ivory text-base tracking-tight font-medium group-hover:text-champagne transition-colors duration-300">
                 Jet Society
               </span>
@@ -107,32 +163,38 @@ export function Navbar() {
                 ))}
               </div>
 
-              <div className="w-px h-5 bg-champagne/10 mr-6" />
+              <div className="w-px h-5 bg-champagne/10 mr-4" />
+
+              <LocaleSwitcher locale={locale} className="mr-4" />
 
               <MagneticButton
                 href="#servicos"
                 className="relative text-sm px-6 py-2.5 text-champagne rounded-lg overflow-hidden transition-all duration-300 active:scale-[0.97] bg-champagne/[0.08] border border-champagne/[0.12] shadow-[inset_0_1px_0_rgba(203,192,170,0.06)] hover:bg-champagne/[0.14] hover:border-champagne/20"
               >
-                Cotar voo
+                {t.nav.cta}
               </MagneticButton>
             </div>
 
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="md:hidden text-champagne p-2 active:scale-[0.92] transition-transform"
-            >
-              <AnimatePresence mode="wait">
-                {isOpen ? (
-                  <motion.div key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}>
-                    <X size={22} weight="bold" />
-                  </motion.div>
-                ) : (
-                  <motion.div key="menu" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}>
-                    <List size={22} weight="bold" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </button>
+            <div className="flex items-center gap-2 md:hidden">
+              <LocaleSwitcher locale={locale} />
+
+              <button
+                onClick={() => setIsOpen(!isOpen)}
+                className="text-champagne p-2 active:scale-[0.92] transition-transform"
+              >
+                <AnimatePresence mode="wait">
+                  {isOpen ? (
+                    <motion.div key="close" initial={{ rotate: -90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: 90, opacity: 0 }} transition={{ duration: 0.2 }}>
+                      <X size={22} weight="bold" />
+                    </motion.div>
+                  ) : (
+                    <motion.div key="menu" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}>
+                      <List size={22} weight="bold" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -176,7 +238,7 @@ export function Navbar() {
                 }}
                 className="text-sm px-6 py-3.5 bg-champagne/[0.08] border border-champagne/[0.12] shadow-[inset_0_1px_0_rgba(203,192,170,0.06)] text-champagne rounded-lg text-center mt-4 active:scale-[0.98]"
               >
-                Cotar voo
+                {t.nav.cta}
               </motion.a>
             </motion.div>
           </motion.div>

@@ -3,8 +3,9 @@
 import { motion } from "framer-motion";
 import { AppStoreLogo, GooglePlayLogo } from "@phosphor-icons/react";
 import { AnimatedSection } from "./AnimatedSection";
+import { type Dictionary } from "@/lib/dictionaries";
 
-export function AppDownload() {
+export function AppDownload({ t }: { t: Dictionary }) {
   return (
     <section id="app" className="relative py-24 md:py-40 overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-6 md:px-10">
@@ -14,14 +15,13 @@ export function AppDownload() {
           <div className="relative z-10 grid grid-cols-1 md:grid-cols-2 gap-10 p-8 md:p-16 lg:p-20 items-center">
             <AnimatedSection>
               <span className="text-xs font-mono text-champagne-muted tracking-widest uppercase">
-                Disponível agora
+                {t.appDownload.label}
               </span>
               <h2 className="mt-4 text-3xl md:text-5xl tracking-tighter leading-none font-medium text-ivory">
                 Jet Society
               </h2>
               <p className="mt-6 text-base text-champagne-muted leading-relaxed max-w-[45ch]">
-                Gerencie sua aeronave, reserve voos e acompanhe operações
-                diretamente pelo aplicativo.
+                {t.appDownload.description}
               </p>
 
               <div className="mt-10 flex flex-col sm:flex-row gap-4">

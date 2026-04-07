@@ -2,8 +2,9 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { type Dictionary } from "@/lib/dictionaries";
 
-function FloatingBadge() {
+function FloatingBadge({ text }: { text: string }) {
   return (
     <motion.div
       initial={{ opacity: 0, scale: 0.8 }}
@@ -13,13 +14,13 @@ function FloatingBadge() {
     >
       <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
       <span className="text-xs text-champagne-muted tracking-widest uppercase font-mono">
-        Powered by Flapper
+        {text}
       </span>
     </motion.div>
   );
 }
 
-export function Hero() {
+export function Hero({ t }: { t: Dictionary }) {
   return (
     <section className="relative min-h-[100dvh] overflow-hidden bg-[#070d1f]">
       <Image
@@ -38,7 +39,7 @@ export function Hero() {
 
       <div className="relative z-10 flex items-end md:items-center min-h-[100dvh] w-full max-w-[1400px] mx-auto px-5 md:px-10 lg:px-20">
         <div className="max-w-xl pb-8 pt-28 md:pt-0 md:pb-0">
-          <FloatingBadge />
+          <FloatingBadge text={t.hero.badge} />
 
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
@@ -66,9 +67,7 @@ export function Hero() {
             }}
             className="mt-5 md:mt-8 text-sm md:text-lg text-champagne-muted leading-relaxed max-w-[46ch]"
           >
-            A forma mais inteligente de possuir e gerenciar sua aeronave. Um
-            clube seleto combinando gestão completa, eficiência operacional e
-            benefícios sob medida.
+            {t.hero.subtitle}
           </motion.p>
 
           <motion.div
@@ -85,14 +84,14 @@ export function Hero() {
               href="#servicos"
               className="group relative px-6 md:px-8 py-3.5 md:py-4 bg-champagne text-midnight font-medium text-sm tracking-wide rounded-xl overflow-hidden transition-all duration-300 active:scale-[0.98] text-center"
             >
-              <span className="relative z-10">Cotar voo agora</span>
+              <span className="relative z-10">{t.hero.cta}</span>
               <div className="absolute inset-0 bg-ivory opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
             </a>
             <a
               href="#beneficios"
               className="px-6 md:px-8 py-3.5 md:py-4 border border-champagne/20 text-champagne text-sm tracking-wide rounded-xl hover:bg-champagne/5 backdrop-blur-sm transition-all duration-300 active:scale-[0.98] text-center"
             >
-              Conhecer benefícios
+              {t.hero.ctaSecondary}
             </a>
           </motion.div>
 
@@ -102,11 +101,7 @@ export function Hero() {
             transition={{ delay: 1.4, duration: 1 }}
             className="mt-10 md:mt-16 flex items-center gap-6 md:gap-8"
           >
-            {[
-              { value: "50+", label: "Aeronaves" },
-              { value: "24/7", label: "Suporte" },
-              { value: "100%", label: "Gestão" },
-            ].map((stat) => (
+            {t.hero.stats.map((stat) => (
               <div key={stat.label} className="flex flex-col">
                 <span className="text-xl md:text-3xl font-medium text-ivory font-mono tracking-tight">
                   {stat.value}
